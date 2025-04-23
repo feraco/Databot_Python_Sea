@@ -11,21 +11,46 @@ This directory contains Python scripts that replace the Jupyter notebooks in the
 5. **exercise3_pressure_to_depth_log.py** - Convert pressure readings to depth and create a dive log
 6. **exercise4_detect_movement_underwater.py** - Use motion sensors to detect movement patterns
 7. **exercise5_rotate_and_search_magnetometer.py** - Use magnetometer to detect magnetic objects
+8. **run_exercise.py** - Command-line tool to run any exercise
+9. **requirements.txt** - List of required Python packages
+10. **setup.py** - Installation script for the exercises
 
-## Getting Started
+## Installation
 
-1. Make sure you have the Databot Python library installed:
+1. Install the required packages:
+   ```
+   pip install -r python_exercises/requirements.txt
+   ```
+
+2. Install the Databot Python library:
    ```
    pip install -e ./databot-py
    ```
 
-2. Pair with your Databot (only needs to be done once per computer):
+3. Alternatively, install everything at once:
+   ```
+   pip install -e python_exercises
+   ```
+
+## Getting Started
+
+1. Pair with your Databot (only needs to be done once per computer):
    ```python
    from databot import PyDatabot
    PyDatabot.get_databot_address(force_address_read=True)
    ```
 
-3. Run any of the exercise scripts:
+2. Run any exercise using the run_exercise.py script:
+   ```
+   ./python_exercises/run_exercise.py exercise1_light_sensor_underwater
+   ```
+
+3. List all available exercises:
+   ```
+   ./python_exercises/run_exercise.py --list
+   ```
+
+4. Or run the Python files directly:
    ```
    python python_exercises/exercise1_light_sensor_underwater.py
    ```

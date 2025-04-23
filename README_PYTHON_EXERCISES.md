@@ -4,6 +4,12 @@
 
 This repository contains exercises for using the Databot with underwater ROVs. The original exercises were provided as Jupyter notebooks, but this repository now includes Python scripts that can be used instead.
 
+## Repository Organization
+
+- **python_exercises/** - Python scripts for each exercise with simplified structure
+- **jupyter_notebooks/** - Original Jupyter notebooks (for reference)
+- **databot-py/** - Databot Python library
+
 ## Python Scripts vs. Jupyter Notebooks
 
 The Python scripts in the `python_exercises` directory provide several advantages over the Jupyter notebooks:
@@ -14,15 +20,36 @@ The Python scripts in the `python_exercises` directory provide several advantage
 4. **Better Code Organization** - Functions and classes are properly defined and documented
 5. **Easier Debugging** - Standard Python debugging tools work better with .py files
 
-## Getting Started
+## Installation
 
-1. Make sure you have the Databot Python library installed:
+1. Install the required packages:
+   ```
+   pip install -r python_exercises/requirements.txt
+   ```
+
+2. Install the Databot Python library:
    ```
    pip install -e ./databot-py
    ```
 
-2. Explore the Python exercises in the `python_exercises` directory
-3. Read the README.md file in the `python_exercises` directory for details on each exercise
+3. Alternatively, install everything at once:
+   ```
+   pip install -e python_exercises
+   ```
+
+## Running the Exercises
+
+You can run the exercises using the provided run_exercise.py script:
+
+```
+./python_exercises/run_exercise.py exercise1_light_sensor_underwater
+```
+
+Or list all available exercises:
+
+```
+./python_exercises/run_exercise.py --list
+```
 
 ## Available Exercises
 
@@ -56,12 +83,4 @@ The Python scripts are designed to be more accessible for students while still c
 
 ## Original Jupyter Notebooks
 
-The original Jupyter notebooks are still available in the repository:
-
-- `Databot_API_Overview_and_Exercises_With_Code.ipynb`
-- `Depth_LED_Student_Exercise.ipynb`
-- `Exercise1_LightSensor_Underwater.ipynb`
-- `Exercise2_TempProfile_WaterColumn.ipynb`
-- `Exercise3_PressureToDepth_Log.ipynb`
-- `Exercise4_DetectMovementUnderwater.ipynb`
-- `Exercise5_RotateAndSearch_Magnetometer.ipynb`
+The original Jupyter notebooks are available in the `jupyter_notebooks` directory for reference.
