@@ -50,8 +50,8 @@ def calculate_depth(pressure):
         float: Depth in meters
     """
     sea_level_pressure = 101325  # Pa
-    water_density = 1000  # kg/m³
-    gravity = 9.8  # m/s²
+    water_density = 1000  # kg/mÂ³
+    gravity = 9.8  # m/sÂ²
     
     pressure_difference = pressure - sea_level_pressure
     depth = pressure_difference / (water_density * gravity)
@@ -118,17 +118,14 @@ def get_led_for_movement_state(is_moving, is_rotating):
         return DatabotLEDConfig(True, 0, 0, 255)    # Blue for stationary
 
 class MovementDetectionLogger(PyDatabotSaveToFileDataCollector):
-    """
-    Custom logger that detects and logs movement patterns.
-    """
     def process_databot_data(self, epoch, data):
         # Detect movement and rotation
         is_moving = detect_movement(data)
         is_rotating = detect_rotation(data)
         
         # Add movement state to data
-        data['is_moving'] = is_moving
-        data['is_rotating'] = is_rotating
+        data['is_moving'] = bool(is_moving)    # ? Force pure Python bool
+        data['is_rotating'] = bool(is_rotating)  # ? Force pure Python bool
         
         # Calculate depth if pressure data is available
         if 'pressure' in data:
@@ -142,14 +139,22 @@ class MovementDetectionLogger(PyDatabotSaveToFileDataCollector):
         # Add timestamp
         data['timestamp'] = epoch
         
+        # ? Clean all data to ensure it's serializable
+        clean_data = {}
+        for key, value in data.items():
+            if isinstance(value, np.generic):
+                clean_data[key] = value.item()
+            else:
+                clean_data[key] = value
+        
         # Save to file
         with open(self.file_path, 'a') as f:
-            f.write(json.dumps(data) + '\n')
+            f.write(json.dumps(clean_data) + '\n')
         
         # Print status
         state = "ROTATING" if is_rotating else ("MOVING" if is_moving else "STATIONARY")
         print(f"State: {state} | Time: {epoch:.2f}")
-        
+
         # Increment record counter
         self.record_number += 1
         if self.number_of_records_to_collect and self.record_number >= self.number_of_records_to_collect:
@@ -218,7 +223,7 @@ def visualize_movement_data(filename):
     ax1.plot(timestamps, accel_x, 'r-', label="X")
     ax1.plot(timestamps, accel_y, 'g-', label="Y")
     ax1.plot(timestamps, accel_z, 'b-', label="Z")
-    ax1.set_ylabel("Linear Acceleration (m/s²)")
+    ax1.set_ylabel("Linear Acceleration (m/sÂ²)")
     ax1.set_title("ROV Movement Data")
     ax1.grid(True)
     ax1.legend()
@@ -227,7 +232,7 @@ def visualize_movement_data(filename):
     ax2.plot(timestamps, gyro_x, 'r-', label="X")
     ax2.plot(timestamps, gyro_y, 'g-', label="Y")
     ax2.plot(timestamps, gyro_z, 'b-', label="Z")
-    ax2.set_ylabel("Rotation Rate (°/s)")
+    ax2.set_ylabel("Rotation Rate (Â°/s)")
     ax2.grid(True)
     ax2.legend()
     
@@ -253,6 +258,6 @@ def visualize_movement_data(filename):
 if __name__ == "__main__":
     print("Exercise 4: Detect Movement Underwater")
     print("To run this exercise, use the following steps:")
-    print("1. config = configure_motion_sensors()")
-    print("2. collect_movement_data(config, 'movement_log.txt', 200)")
-    print("3. visualize_movement_data('movement_log.txt')")
+    config = configure_motion_sensors()
+    collect_movement_data(config, 'movement_log.txt', 200)
+    visualize_movement_data('movement_log.txt')
